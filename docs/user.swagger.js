@@ -49,7 +49,7 @@ export const getAllUsers = {
       type: 'string',
       example: '2',
       description:
-        'When number of user is greater than 10 users, it divides into pages each page contain 10 users.'
+        'When number of user is greater than the default 10 (or the custom limit that you set) users, it divides into pages each page contain 10 (or the custom limit that you set) users.'
     }
   ],
   responses: {
@@ -92,9 +92,13 @@ export const getAllUsers = {
                         example: '6123dab951ff329fed1bc794'
                       }
                     },
-                    name: {
+                    firstname: {
                       type: 'string',
-                      example: 'Admin'
+                      example: 'John'
+                    },
+                    lastname: {
+                      type: 'string',
+                      example: 'Doe'
                     },
                     username: {
                       type: 'string',
@@ -107,6 +111,10 @@ export const getAllUsers = {
                     companyName: {
                       type: 'string',
                       example: ''
+                    },
+                    vendor: {
+                      type: 'string',
+                      example: 'eg45t4ger5t454hg4'
                     },
                     address: {
                       type: 'string',
@@ -215,9 +223,17 @@ export const getUser = {
                       example: '6123dab951ff329fed1bc794'
                     }
                   },
-                  name: {
+                  firstname: {
                     type: 'string',
-                    example: 'Admin'
+                    example: 'John'
+                  },
+                  lastname: {
+                    type: 'string',
+                    example: 'Doe'
+                  },
+                  vendor: {
+                    type: 'string',
+                    example: 'uefgh7843th7eufge'
                   },
                   username: {
                     type: 'string',
@@ -297,7 +313,11 @@ export const addUser = {
         schema: {
           type: 'object',
           properties: {
-            name: {
+            firstname: {
+              type: 'string',
+              required: true
+            },
+            lastname: {
               type: 'string',
               required: true
             },
@@ -377,17 +397,21 @@ export const addUser = {
                     type: 'string',
                     example: '6123f6756874853c161ec5b9'
                   },
-                  name: {
+                  firstname: {
                     type: 'string',
-                    example: 'armar'
+                    example: 'John'
+                  },
+                  lastname: {
+                    type: 'string',
+                    example: 'Doe'
                   },
                   username: {
                     type: 'string',
-                    example: 'armar'
+                    example: 'johndoe'
                   },
                   email: {
                     type: 'string',
-                    example: 'armar@gmail.com'
+                    example: 'johndoe@gmail.com'
                   },
                   companyName: {
                     type: 'string',
@@ -404,11 +428,11 @@ export const addUser = {
                   profileImage: {
                     type: 'string',
                     example:
-                      'https://res.cloudinary.com/dknma8cck/image/upload/v1629746804/EcommerceAPI/Users/armar/cmt6rf3l45rs0lqaviq7.webp'
+                      'https://res.cloudinary.com/dknma8cck/image/upload/v1629746804/EcommerceAPI/Users/johndoe/cmt6rf3l45rs0lqaviq7.webp'
                   },
                   profileImageId: {
                     type: 'string',
-                    example: 'EcommerceAPI/Users/armar/cmt6rf3l45rs0lqaviq7'
+                    example: 'EcommerceAPI/Users/johndoe/cmt6rf3l45rs0lqaviq7'
                   }
                 }
               }
@@ -546,15 +570,15 @@ export const updateUserDetails = {
                   },
                   name: {
                     type: 'string',
-                    example: 'armar1'
+                    example: 'johndoe1'
                   },
                   username: {
                     type: 'string',
-                    example: 'armar1'
+                    example: 'johndoe1'
                   },
                   email: {
                     type: 'string',
-                    example: 'armar@gmail.com'
+                    example: 'johndoe@gmail.com'
                   },
                   companyName: {
                     type: 'string',
@@ -571,11 +595,11 @@ export const updateUserDetails = {
                   profileImage: {
                     type: 'string',
                     example:
-                      'https://res.cloudinary.com/dknma8cck/image/upload/v1629746804/EcommerceAPI/Users/armar/cmt6rf3l45rs0lqaviq7.webp'
+                      'https://res.cloudinary.com/dknma8cck/image/upload/v1629746804/EcommerceAPI/Users/johndoe/cmt6rf3l45rs0lqaviq7.webp'
                   },
                   profileImageId: {
                     type: 'string',
-                    example: 'EcommerceAPI/Users/armar/cmt6rf3l45rs0lqaviq7'
+                    example: 'EcommerceAPI/Users/johndoe/cmt6rf3l45rs0lqaviq7'
                   }
                 }
               }

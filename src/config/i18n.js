@@ -129,7 +129,9 @@ export const messages = {
     successfulVendorLogo: 'Vendor logo updated successfully.',
     successfulVendorDelete: 'Account deleted successfully.',
     notVendorUser: 'You are not allowed to change this info.',
-    noVendorFoundWithID: 'No vendor found with this ID.'
+    noVendorFoundWithID: 'No vendor found with this ID.',
+    noVendorsFound: 'No vendors found.',
+    successfulVendorStatus: 'Vendor status updated successfully.'
   },
   sw: {
     profileImageRequired: 'Tafadhali chagua picha ya mtumiaji.',
@@ -258,6 +260,8 @@ export const messages = {
     successfulVendorLogo: 'Umefanikiwa kubadili picha ya logo ya mchuuzi.',
     successfulVendorDelete: 'Akaunti ya mchuuzi imefutwa kwa ukamilifu.',
     notVendorUser: 'Hauruhusiwi kubadili hizi taarifa.',
-    noVendorFoundWithID: 'Hakuna mchuuzi aliyepatikana mwenye hii ID.'
+    noVendorFoundWithID: 'Hakuna mchuuzi aliyepatikana mwenye hii ID.',
+    noVendorsFound: 'Hakuna wachuuzi waliopatikana.',
+    successfulVendorStatus: 'Hali ya mchuuzi imebadilishwa kwa mafanikio.'
   }
 };

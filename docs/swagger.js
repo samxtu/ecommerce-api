@@ -61,6 +61,17 @@ import {
 } from './user.swagger';
 
 import {
+  createVendor,
+  getVendors,
+  getVendor,
+  updateVendorDetails,
+  updateVendorProfileImage,
+  updateVendorLogo,
+  updateVendorStatus,
+  deleteVendor
+} from './vendor.swagger';
+
+import {
   createNewOrder,
   getAllOrders,
   getOrder,
@@ -102,7 +113,7 @@ const docs = {
       description: 'Production Server'
     },
     {
-      url: 'http://localhost:8000/api',
+      url: 'http://localhost:4400/api',
       description: 'Development Server'
     }
   ],
@@ -159,6 +170,26 @@ const docs = {
     },
     '/user/me': {
       delete: deleteMyAccount
+    },
+    '/vendor': {
+      get: getVendors,
+      post: createVendor
+    },
+    '/vendor/{vendorId}': {
+      get: getVendor,
+      delete: deleteVendor
+    },
+    '/vendor/update-details': {
+      patch: updateVendorDetails
+    },
+    '/vendor/update-status': {
+      patch: updateVendorStatus
+    },
+    '/vendor/update-profile-image': {
+      patch: updateVendorProfileImage
+    },
+    '/vendor/update-logo': {
+      patch: updateVendorLogo
     },
     '/category': {
       get: getAllCategories,

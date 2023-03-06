@@ -176,7 +176,7 @@ export const updateVendorDetails = catchAsync(async (user, body) => {
     };
   }
 
-  // 3) Make sure non admin user does not activate disabled vendor
+  // 3) Make sure non admin user does not activate disabled vendor or deactivate a vendor
   delete body.isVerified;
 
   // 4) Find vendor document and update it
@@ -204,25 +204,18 @@ export const updateVendorStatus = catchAsync(async (user, body) => {
     const { role } = user;
     const { id, isVerified } = body;
   
-    // 1) Check if user has cred 
-    if (role != 'admin' || role != 'adminUser') {
-      return {
-        type: 'Error',
-        message: 'roleRestriction',
-        statusCode: 400
-      };
-    }
-  
-    // 2) Find vendor document and update it
+    // 1) Find vendor document and update it
     vendor = await Vendor.findByIdAndUpdate(id, {isVerified:!isVerified}, {
       new: true,
       runValidators: true
     });
+
+    // 2) Check if vendor exist?
   
-    // 4) If everything is OK, send data
+    // 3) If everything is OK, send data
     return {
       type: 'Success',
-      message: 'successfulVendorDetails',
+      message: 'successfulVendorStatus',
       statusCode: 200,
       vendor
     };
