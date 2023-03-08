@@ -17,10 +17,10 @@ const {
   getAllProducts,
   getProduct,
   addProduct,
-  addProductColor,
-  addProductSize,
-  deleteProductColor,
-  deleteProductSize,
+  addProductSpecification,
+  addProductAttribute,
+  deleteProductSpecification,
+  deleteProductAttribute,
   updateProductDetails,
   updateProductMainImage,
   updateProductImages,
@@ -44,11 +44,11 @@ router.get('/:productId', getProduct);
 router.use(protect);
 
 router
-  .route('/color/:productId')
-  .post(addProductColor)
-  .delete(deleteProductColor);
+  .route('/specification/:productId')
+  .post(addProductSpecification)
+  .delete(deleteProductSpecification);
 
-router.route('/size/:productId').post(addProductSize).delete(deleteProductSize);
+router.route('/attribute/:productId').post(addProductAttribute).delete(deleteProductAttribute);
 
 router.post('/', anyMulter(), addProduct);
 

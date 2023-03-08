@@ -14,14 +14,14 @@ import { User } from '../models/index';
  * @returns { Object<type|message|statusCode|user> }
  */
 export const createUser = catchAsync(async (body, profileImage) => {
-  // 1) Check if profile image provided
-  if (profileImage === undefined) {
-    return {
-      type: 'Error',
-      message: 'profileImageRequired',
-      statusCode: 400
-    };
-  }
+  // // 1) Check if profile image provided
+  // if (profileImage === undefined) {
+  //   return {
+  //     type: 'Error',
+  //     message: 'profileImageRequired',
+  //     statusCode: 400
+  //   };
+  // }
 
   const { firstname, lastname, username, email, password, passwordConfirmation, role } = body;
   let { companyName, address, phone } = body;
@@ -38,8 +38,8 @@ export const createUser = catchAsync(async (body, profileImage) => {
     !email ||
     !password ||
     !passwordConfirmation ||
-    !role ||
-    profileImage.length === 0
+    !role 
+    // || profileImage.length === 0
   ) {
     return {
       type: 'Error',
@@ -59,15 +59,15 @@ export const createUser = catchAsync(async (body, profileImage) => {
     };
   }
 
-  // 4) Specifiy folder name where the images are going to be uploaded in cloudinary
-  const folderName = `Users/${username.trim().split(' ').join('')}`;
+  // // 4) Specifiy folder name where the images are going to be uploaded in cloudinary
+  // const folderName = `Users/${username.trim().split(' ').join('')}`;
 
-  // 5) Upload image to cloudinary
-  const image = await uploadFile(
-    dataUri(profileImage).content,
-    folderName,
-    600
-  );
+  // // 5) Upload image to cloudinary
+  // const image = await uploadFile(
+  //   dataUri(profileImage).content,
+  //   folderName,
+  //   600
+  // );
 
   // 6) Create new user
   const user = await User.create({
@@ -81,8 +81,8 @@ export const createUser = catchAsync(async (body, profileImage) => {
     companyName,
     address,
     phone,
-    profileImage: image.secure_url,
-    profileImageId: image.public_id
+    // profileImage: image.secure_url,
+    // profileImageId: image.public_id
   });
 
   // 7) If everything is OK, send data

@@ -77,12 +77,10 @@ const userSchema = mongoose.Schema(
       type: String
     },
     profileImage: {
-      type: String,
-      required: true
+      type: String
     },
     profileImageId: {
-      type: String,
-      required: true
+      type: String
     },
     discountCode: {
       type: String

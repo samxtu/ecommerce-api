@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // Plugins
 import toJSON from './plugins/index';
 
-const sizeSchema = mongoose.Schema(
+const specificationSchema = mongoose.Schema(
   {
     product: [
       {
@@ -12,7 +12,13 @@ const sizeSchema = mongoose.Schema(
         ref: 'Product'
       }
     ],
-    size: {
+    option: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Option'
+      }
+    ],
+    name: {
       type: String
     }
   },
@@ -22,8 +28,8 @@ const sizeSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-sizeSchema.plugin(toJSON);
+specificationSchema.plugin(toJSON);
 
-const Size = mongoose.model('Size', sizeSchema);
+const Specification = mongoose.model('Specification', specificationSchema);
 
-export default Size;
+export default Specification;

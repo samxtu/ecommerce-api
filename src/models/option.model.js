@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // Plugins
 import toJSON from './plugins/index';
 
-const colorSchema = mongoose.Schema(
+const optionSchema = mongoose.Schema(
   {
     product: [
       {
@@ -12,8 +12,13 @@ const colorSchema = mongoose.Schema(
         ref: 'Product'
       }
     ],
-    color: {
-      type: String
+    specification: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Specification'
+    },
+    value: {
+      type: String,
+      required: true
     }
   },
   {
@@ -22,8 +27,8 @@ const colorSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-colorSchema.plugin(toJSON);
+optionSchema.plugin(toJSON);
 
-const Color = mongoose.model('Color', colorSchema);
+const Option = mongoose.model('Option', optionSchema);
 
-export default Color;
+export default Option;

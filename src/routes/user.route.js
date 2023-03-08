@@ -27,6 +27,10 @@ router.get('/', getUsers);
 // Get User Route
 router.get('/:id', getUser);
 
+
+// Create New admin temporaly code
+router.post('/create-admin-route', createUser);
+
 // Protect All Next Routes
 router.use(protect);
 

@@ -27,10 +27,10 @@ import {
   updateProductMainImage,
   updateProductImages,
   deleteProduct,
-  addProductColor,
-  addProductSize,
-  deleteProductColor,
-  deleteProductSize
+  addProductSpecification,
+  addProductAttribute,
+  deleteProductSpecification,
+  deleteProductAttribute
 } from './product.swagger';
 
 import {
@@ -226,13 +226,13 @@ const docs = {
     '/product/{productId}/images': {
       patch: updateProductImages
     },
-    '/product/color/{productId}': {
-      post: addProductColor,
-      delete: deleteProductColor
+    '/product/specification/{productId}': {
+      post: addProductSpecification,
+      delete: deleteProductSpecification
     },
-    '/product/size/{productId}': {
-      post: addProductSize,
-      delete: deleteProductSize
+    '/product/attribute/{productId}': {
+      post: addProductAttribute,
+      delete: deleteProductAttribute
     },
     '/favorite': {
       get: getFavoriteList,

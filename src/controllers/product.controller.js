@@ -77,7 +77,7 @@ export const getProduct = catchAsync(async (req, res) => {
  * @param     { Object } res - Response object
  * @property  { Object } req.body - Body object data
  * @property  { Object } req.files - Product images
- * @property  { String } req.user.id - User ID
+ * @property  { String } req.user - User ID
  * @returns   { JSON } - A JSON object representing the type, message and the product
  */
 export const addProduct = catchAsync(async (req, res) => {
@@ -85,7 +85,7 @@ export const addProduct = catchAsync(async (req, res) => {
 
   // 1) Create product
   const { type, message, statusCode, product } =
-    await productService.createProduct(body, files, user.id);
+    await productService.createProduct(body, files, user.vendor);
 
   // 2) Check if there is an error
   if (type === 'Error') {
@@ -104,21 +104,21 @@ export const addProduct = catchAsync(async (req, res) => {
 });
 
 /**
- * @desc      Add Product Color Controller
+ * @desc      Add Product Specification Controller
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
- * @property  { String } req.body.color - Product color
+ * @property  { String } req.user.vendor - Seller ID
+ * @property  { String } req.body.specification - Product specification
  * @returns   { JSON } - A JSON object representing the type, message and the product
  */
-export const addProductColor = catchAsync(async (req, res) => {
-  // 1) Add product color
-  const { type, message, statusCode, color } =
-    await productService.addProductColor(
+export const addProductSpecification = catchAsync(async (req, res) => {
+  // 1) Add product specification
+  const { type, message, statusCode, specification } =
+    await productService.addProductSpecification(
       req.params.productId,
-      req.user.id,
-      req.body.color
+      req.user.vendor,
+      req.body.specification
     );
 
   // 2) Check if there is an error
@@ -133,26 +133,26 @@ export const addProductColor = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    color
+    specification
   });
 });
 
 /**
- * @desc      Add Product Size Controller
+ * @desc      Add Product Attribute Controller
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
- * @property  { String } req.body.size - Product size
+ * @property  { String } req.user.vendor - Seller ID
+ * @property  { String } req.body.attribute - Product attribute
  * @returns   { JSON } - A JSON object representing the type, message and the product
  */
-export const addProductSize = catchAsync(async (req, res) => {
-  // 1) Add product size
-  const { type, message, statusCode, size } =
-    await productService.addProductSize(
+export const addProductAttribute = catchAsync(async (req, res) => {
+  // 1) Add product attribute
+  const { type, message, statusCode, attribute } =
+    await productService.addProductAttribute(
       req.params.productId,
-      req.user.id,
-      req.body.size
+      req.user.vendor,
+      req.body.attribute
     );
 
   // 2) Check if there is an error
@@ -167,7 +167,7 @@ export const addProductSize = catchAsync(async (req, res) => {
   return res.status(statusCode).json({
     type,
     message: req.polyglot.t(message),
-    size
+    attribute
   });
 });
 
@@ -176,7 +176,7 @@ export const addProductSize = catchAsync(async (req, res) => {
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
+ * @property  { String } req.user.vendor - Seller ID
  * @property  { Object } req.body - Body object data
  * @returns   { JSON } - A JSON object representing the type, message and the product
  */
@@ -185,7 +185,7 @@ export const updateProductDetails = catchAsync(async (req, res) => {
   const { type, message, statusCode, product } =
     await productService.updateProductDetails(
       req.params.productId,
-      req.user.id,
+      req.user.vendor,
       req.body
     );
 
@@ -210,7 +210,7 @@ export const updateProductDetails = catchAsync(async (req, res) => {
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
+ * @property  { String } req.user.vendor - Seller ID
  * @property  { Object } req.files - Product main image
  * @returns   { JSON } - A JSON object representing the type, message, and the product
  */
@@ -219,7 +219,7 @@ export const updateProductMainImage = catchAsync(async (req, res) => {
   const { type, message, statusCode, product } =
     await productService.updateProductMainImage(
       req.params.productId,
-      req.user.id,
+      req.user.vendor,
       req.files
     );
 
@@ -243,7 +243,7 @@ export const updateProductMainImage = catchAsync(async (req, res) => {
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
+ * @property  { String } req.user.vendor - Seller ID
  * @property  { Object } req.files - Product sub images
  * @returns   { JSON } - A JSON object representing the type, message, and the product
  */
@@ -252,7 +252,7 @@ export const updateProductImages = catchAsync(async (req, res) => {
   const { type, message, statusCode, product } =
     await productService.updateProductImages(
       req.params.productId,
-      req.user.id,
+      req.user.vendor,
       req.files
     );
 
@@ -277,14 +277,14 @@ export const updateProductImages = catchAsync(async (req, res) => {
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
+ * @property  { String } req.user.vendor - Seller ID
  * @return    { JSON } - A JSON object representing the type and message
  */
 export const deleteProduct = catchAsync(async (req, res) => {
   // 1) Delete product using it's ID
   const { type, message, statusCode } = await productService.deleteProduct(
     req.params.productId,
-    req.user.id
+    req.user.vendor
   );
 
   // 2) Check if there is an error
@@ -303,20 +303,20 @@ export const deleteProduct = catchAsync(async (req, res) => {
 });
 
 /**
- * @desc      Delete Product Color Controller
+ * @desc      Delete Product Specification Controller
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
- * @property  { String } req.body.color - Product color
+ * @property  { String } req.user.vendor - Seller ID
+ * @property  { String } req.body.specification - Product specification
  * @return    { JSON } - A JSON object representing the type and message
  */
-export const deleteProductColor = catchAsync(async (req, res) => {
-  // 1) Delete product color
-  const { type, message, statusCode } = await productService.deleteProductColor(
+export const deleteProductSpecification = catchAsync(async (req, res) => {
+  // 1) Delete product specification
+  const { type, message, statusCode } = await productService.deleteProductSpecification(
     req.params.productId,
-    req.user.id,
-    req.body.color
+    req.user.vendor,
+    req.body.specification
   );
 
   // 2) Check if there is an error
@@ -335,20 +335,20 @@ export const deleteProductColor = catchAsync(async (req, res) => {
 });
 
 /**
- * @desc      Delete Product Size Controller
+ * @desc      Delete Product Attribute Controller
  * @param     { Object } req - Request object
  * @param     { Object } res - Response object
  * @property  { String } req.params.productId - Product ID
- * @property  { String } req.user.id - Seller ID
- * @property  { String } req.body.size - Product size
+ * @property  { String } req.user.vendor - Seller ID
+ * @property  { String } req.body.attribute - Product Attribute
  * @return    { JSON } - A JSON object representing the type and message
  */
-export const deleteProductSize = catchAsync(async (req, res) => {
-  // 1) Delete product size
-  const { type, message, statusCode } = await productService.deleteProductSize(
+export const deleteProductAttribute = catchAsync(async (req, res) => {
+  // 1) Delete product Attribute
+  const { type, message, statusCode } = await productService.deleteProductAttribute(
     req.params.productId,
-    req.user.id,
-    req.body.size
+    req.user.vendor,
+    req.body.attribute
   );
 
   // 2) Check if there is an error

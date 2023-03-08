@@ -149,23 +149,7 @@ export const getAllProducts = {
                       type: 'integer',
                       example: 2635
                     },
-                    colors: {
-                      type: 'array',
-                      items: {
-                        type: 'object',
-                        properties: {
-                          _id: {
-                            type: 'string',
-                            example: '6145a457d495858ff0d6e8a2'
-                          },
-                          color: {
-                            type: 'string',
-                            example: 'Black'
-                          }
-                        }
-                      }
-                    },
-                    sizes: {
+                    specifications: {
                       type: 'array',
                       items: {
                         type: 'object',
@@ -174,9 +158,36 @@ export const getAllProducts = {
                             type: 'string',
                             example: '6145a458d495858ff0d6e8a5'
                           },
-                          size: {
+                          name: {
                             type: 'string',
-                            example: 'Large'
+                            example: 'Color'
+                          },
+                          options: {
+                            type: 'array',
+                            items: {
+                              type: 'string',
+                              example: 'FFFFFF'
+                            }
+                          }
+                        }
+                      }
+                    },
+                    attributes: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          _id: {
+                            type: 'string',
+                            example: '6145a458d495858ff0d6e8a5'
+                          },
+                          name: {
+                            type: 'string',
+                            example: 'Manufacturer'
+                          },
+                          value: {
+                            type: 'string',
+                            example: 'Lenovo'
                           }
                         }
                       }
@@ -345,23 +356,7 @@ export const getProduct = {
                     type: 'integer',
                     example: 2635
                   },
-                  colors: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        _id: {
-                          type: 'string',
-                          example: '6145a457d495858ff0d6e8a2'
-                        },
-                        color: {
-                          type: 'string',
-                          example: 'Black'
-                        }
-                      }
-                    }
-                  },
-                  sizes: {
+                  specifications: {
                     type: 'array',
                     items: {
                       type: 'object',
@@ -370,9 +365,36 @@ export const getProduct = {
                           type: 'string',
                           example: '6145a458d495858ff0d6e8a5'
                         },
-                        size: {
+                        name: {
                           type: 'string',
-                          example: 'Large'
+                          example: 'Color'
+                        },
+                        options: {
+                          type: 'array',
+                          items: {
+                            type: 'string',
+                            example: 'FFFFFF'
+                          }
+                        }
+                      }
+                    }
+                  },
+                  attributes: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        _id: {
+                          type: 'string',
+                          example: '6145a458d495858ff0d6e8a5'
+                        },
+                        name: {
+                          type: 'string',
+                          example: 'Manufacturer'
+                        },
+                        value: {
+                          type: 'string',
+                          example: 'Lenovo'
                         }
                       }
                     }
@@ -463,15 +485,19 @@ export const addProduct = {
               type: 'integer',
               required: true
             },
-            colors: {
-              type: 'string',
-              required: true,
-              example: 'Red, Green, Blue'
+            specifications: {
+              type: 'array',
+              items: {
+                type: 'object',
+                example: '6145a458d495858ff0d6e8a5'
+              }
             },
-            sizes: {
-              type: 'string',
-              required: true,
-              example: 'S, M, L'
+            attributes: {
+              type: 'array',
+              items: {
+                type: 'string',
+                example: '6145a458d495858ff0d6e8a5'
+              }
             },
             quantity: {
               type: 'integer',
@@ -596,14 +622,26 @@ export const addProduct = {
                     type: 'integer',
                     example: 2635
                   },
-                  colors: {
+                  specifications: {
                     type: 'array',
                     items: {
-                      type: 'string',
-                      example: '6145a457d495858ff0d6e8a2'
+                      type: 'object',
+                      properties: {
+                        name: {
+                          type: 'string',
+                          example: 'Color'
+                        },
+                        options: {
+                          type: 'array',
+                          items: {
+                            type: 'string',
+                            example: 'FFFFFF'
+                          }
+                        }
+                      }
                     }
                   },
-                  sizes: {
+                  attributes: {
                     type: 'array',
                     items: {
                       type: 'string',
@@ -800,23 +838,7 @@ export const top5Cheap = {
                       type: 'integer',
                       example: 2635
                     },
-                    colors: {
-                      type: 'array',
-                      items: {
-                        type: 'object',
-                        properties: {
-                          _id: {
-                            type: 'string',
-                            example: '6145a457d495858ff0d6e8a2'
-                          },
-                          color: {
-                            type: 'string',
-                            example: 'Black'
-                          }
-                        }
-                      }
-                    },
-                    sizes: {
+                    specifications: {
                       type: 'array',
                       items: {
                         type: 'object',
@@ -825,9 +847,36 @@ export const top5Cheap = {
                             type: 'string',
                             example: '6145a458d495858ff0d6e8a5'
                           },
-                          size: {
+                          name: {
                             type: 'string',
-                            example: 'Large'
+                            example: 'Color'
+                          },
+                          options: {
+                            type: 'array',
+                            items: {
+                              type: 'string',
+                              example: 'FFFFFF'
+                            }
+                          }
+                        }
+                      }
+                    },
+                    attributes: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          _id: {
+                            type: 'string',
+                            example: '6145a458d495858ff0d6e8a5'
+                          },
+                          name: {
+                            type: 'string',
+                            example: 'Manufacturer'
+                          },
+                          value: {
+                            type: 'string',
+                            example: 'Lenovo'
                           }
                         }
                       }
@@ -962,10 +1011,10 @@ export const productStats = {
   }
 };
 
-export const addProductColor = {
+export const addProductSpecification = {
   tags: ['Product'],
-  description: 'This route allow only admin or seller add new product color',
-  opeationId: 'addProductColor',
+  description: 'This route allow only admin or seller to add new product specification',
+  opeationId: 'addProductSpecification',
   parameters: [
     {
       in: 'header',
@@ -987,8 +1036,21 @@ export const addProductColor = {
         schema: {
           type: 'object',
           properties: {
-            color: {
-              type: 'string'
+            specification: {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  example: 'Size'
+                },
+                options: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    example: '32'/'XXL',
+                  }
+                }
+              }
             }
           }
         }
@@ -997,7 +1059,7 @@ export const addProductColor = {
   },
   responses: {
     200: {
-      description: 'Add Product Color',
+      description: 'Add Product Specification',
       content: {
         'application/json': {
           schema: {
@@ -1009,7 +1071,7 @@ export const addProductColor = {
               },
               message: {
                 type: 'string',
-                example: 'Color added successfully.'
+                example: 'Specification added successfully.'
               },
               color: {
                 type: 'object',
@@ -1018,9 +1080,16 @@ export const addProductColor = {
                     type: 'string',
                     example: '6145e6f059b4c663fa7e0da2'
                   },
-                  color: {
+                  name: {
                     type: 'string',
-                    example: 'Red'
+                    example: 'Size'
+                  },
+                  options: {
+                    type: 'array',
+                    items: {
+                      type: 'string',
+                      example: 'XL'
+                    }
                   },
                   product: {
                     type: 'array',
@@ -1049,7 +1118,7 @@ export const addProductColor = {
               },
               message: {
                 type: 'string',
-                example: 'Color already exists.'
+                example: 'Specification already exists.'
               }
             }
           }
@@ -1079,10 +1148,10 @@ export const addProductColor = {
   }
 };
 
-export const addProductSize = {
+export const addProductAttribute = {
   tags: ['Product'],
-  description: 'This route allow only admin or seller add new product size',
-  opeationId: 'addProductSize',
+  description: 'This route allow only admin or seller add new product attribute',
+  opeationId: 'addProductAttribute',
   parameters: [
     {
       in: 'header',
@@ -1104,7 +1173,10 @@ export const addProductSize = {
         schema: {
           type: 'object',
           properties: {
-            size: {
+            name: {
+              type: 'string'
+            },
+            value: {
               type: 'string'
             }
           }
@@ -1114,7 +1186,7 @@ export const addProductSize = {
   },
   responses: {
     200: {
-      description: 'Add Product Size',
+      description: 'Add Product Attribute',
       content: {
         'application/json': {
           schema: {
@@ -1126,18 +1198,22 @@ export const addProductSize = {
               },
               message: {
                 type: 'string',
-                example: 'Size added successfully.'
+                example: 'Attribute added successfully.'
               },
-              color: {
+              attribute: {
                 type: 'object',
                 properties: {
                   _id: {
                     type: 'string',
                     example: '6145e6f059b4c663fa7e0da2'
                   },
-                  size: {
+                  name: {
                     type: 'string',
-                    example: 'Large'
+                    example: 'Manufacturer'
+                  },
+                  value: {
+                    type: 'string',
+                    example: 'Apple'
                   },
                   product: {
                     type: 'array',
@@ -1166,7 +1242,7 @@ export const addProductSize = {
               },
               message: {
                 type: 'string',
-                example: 'Size already exists.'
+                example: 'Attribute already exists.'
               }
             }
           }
@@ -1536,11 +1612,11 @@ export const deleteProduct = {
   }
 };
 
-export const deleteProductColor = {
+export const deleteProductSpecification = {
   tags: ['Product'],
   description:
-    "This route allow logged in seller/admin to delete product color using it's ID",
-  opeationId: 'deleteProductColor',
+    "This route allow logged in seller/admin to delete product specification using it's ID",
+  opeationId: 'deleteProductSpecification',
   parameters: [
     {
       in: 'header',
@@ -1555,9 +1631,34 @@ export const deleteProductColor = {
       description: 'Product ID'
     }
   ],
+  body: {
+    type: 'object',
+    properties: {
+      attribute: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'integer',
+            example: 1
+          },
+          name: {
+            type: 'string',
+            example: 'Color'
+          },
+          options: {
+            type: 'array',
+            items: {
+              type: 'string',
+              example: 'FFFFFF'
+            }
+          }
+        }
+      }
+    }
+  },
   responses: {
     200: {
-      description: 'Delete Product Color',
+      description: 'Delete Product Specification',
       content: {
         'application/json': {
           schema: {
@@ -1569,7 +1670,7 @@ export const deleteProductColor = {
               },
               message: {
                 type: 'string',
-                example: 'Product color deleted successfully.'
+                example: 'Product specification deleted successfully.'
               }
             }
           }
@@ -1593,7 +1694,7 @@ export const deleteProductColor = {
               },
               message2: {
                 type: 'string',
-                example: 'Color does not exist.'
+                example: 'Specification does not exist.'
               }
             }
           }
@@ -1603,11 +1704,11 @@ export const deleteProductColor = {
   }
 };
 
-export const deleteProductSize = {
+export const deleteProductAttribute = {
   tags: ['Product'],
   description:
-    "This route allow logged in seller/admin to delete product size using it's ID",
-  opeationId: 'deleteProductSize',
+    "This route allow logged in seller/admin to delete product attribute using it's ID",
+  opeationId: 'deleteProductAttribute',
   parameters: [
     {
       in: 'header',
@@ -1622,9 +1723,31 @@ export const deleteProductSize = {
       description: 'Product ID'
     }
   ],
+  body: {
+    type: 'object',
+    properties: {
+      attribute: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'integer',
+            example: 1
+          },
+          value: {
+            type: 'string',
+            example: 'HP'
+          },
+          name: {
+            type: 'string',
+            example: 'Manufacturer'
+          }
+        }
+      }
+    }
+  },
   responses: {
     200: {
-      description: 'Delete product size',
+      description: 'Delete product attribute',
       content: {
         'application/json': {
           schema: {
@@ -1636,7 +1759,7 @@ export const deleteProductSize = {
               },
               message: {
                 type: 'string',
-                example: 'Size deleted successfully.'
+                example: 'Attribute deleted successfully.'
               }
             }
           }
@@ -1660,7 +1783,7 @@ export const deleteProductSize = {
               },
               message2: {
                 type: 'string',
-                example: 'Size does not exist.'
+                example: 'Attribute does not exist.'
               }
             }
           }

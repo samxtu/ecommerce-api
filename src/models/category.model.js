@@ -8,6 +8,14 @@ const categorySchema = mongoose.Schema(
       required: true,
       unique: true
     },
+    child: {
+      type: Boolean,
+      default: false
+    },
+    parent: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Category'
+    },
     description: {
       type: String,
       required: true

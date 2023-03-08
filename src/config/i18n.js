@@ -51,23 +51,23 @@ export const messages = {
     noDiscountCodesFound: 'No discount codes found',
     noUserFoundWithID: 'No user found with this ID.',
     notFoundInFavoriteList: 'Product not found in favorite list.',
-    colorExists: 'Color already exists.',
-    sizeExists: 'Size already exists',
-    noColorExists: 'Color does not exist.',
-    noSizeExists: 'Size does not exist.',
+    specificationExists: 'Specification already exists.',
+    attributeExists: 'Attribute already exists',
+    noSpecificationExists: 'Specification does not exist.',
+    noAttributeExists: 'Attribute does not exist.',
     notInStatusEnum:
       'Sorry by status must be one of the following: Not Processed, Processing, Shipped, Waiting Delivery, Delivered, Cancelled.',
-    notColorOrSizesRoute:
-      'Sorry this is not the right route to update colors and sizes.',
+    notSpecificationOrAttributesRoute:
+      'Sorry this is not the right route to update specifications and attributes.',
     passwordUpdateRoute:
       'Cannot update password from here, please go to update password route.',
     successfulSignUp: 'Account created successful, please verify your email!',
     successfulLogin: 'User logged in successfuly.',
     successfulLogout: 'Logged out successfuly.',
-    successfulAddProductColor: 'Color added successfully.',
-    successfulAddProductSize: 'Size added successfully.',
-    successfulDeleteProductColor: 'Color deleted successfully.',
-    successfulDeleteProductSize: 'Size deleted successfully.',
+    successfulAddProductSpecification: 'Specification added successfully.',
+    successfulAddProductAttribute: 'Attribute added successfully.',
+    successfulDeleteProductSpecification: 'Specification deleted successfully.',
+    successfulDeleteProductAttribute: 'Attribute deleted successfully.',
     successfulTokenGeneration: 'Tokens generated successfully.',
     successfulPasswordChange: 'Password changed successfully.',
     successfulEmailVerification: 'Email verified successfully.',
@@ -131,7 +131,8 @@ export const messages = {
     notVendorUser: 'You are not allowed to change this info.',
     noVendorFoundWithID: 'No vendor found with this ID.',
     noVendorsFound: 'No vendors found.',
-    successfulVendorStatus: 'Vendor status updated successfully.'
+    successfulVendorStatus: 'Vendor status updated successfully.',
+    optionsAdded: 'The specification exists but the options were added successfully.'
   },
   sw: {
     profileImageRequired: 'Tafadhali chagua picha ya mtumiaji.',
@@ -181,21 +182,21 @@ export const messages = {
       'Tafadhali tumia kodi ya punguzo kwa kipindi hiki, kabla hujapata nyingine.',
     noUserFoundWithID: 'Hakuna mtumiaji aliyepatikana kwa hii ID.',
     notFoundInFavoriteList: 'Hakuna bidhaa hii katika orodha ya bidhaa zilizopendwa.',
-    colorExists: 'Rangi hii tayari ipo.',
-    sizeExists: 'Ukubwa huu tayari ipo.',
-    noSizeExists: 'Ukubwa huu haujapatikana.',
+    specificationExists: 'Chaguo hili tayari lipo.',
+    attributeExists: 'Sifa hii tayari ipo.',
+    noAttributeExists: 'Sifa hii haijapatikana.',
     notSeller: 'Huna ruhusa ya kufanya hivyo, wewe si mmiliki wa hii bidhaa.',
-    noColorExists: 'Rangi hii haijapatikana.',
-    notColorOrSizesRoute:
-      'Hakuna ruhusa ya kufanya hivyo, hii si njia ya kubadili taarifa za rangi na ukubwa.',
+    noSpecificationExists: 'Chaguo hili halijapatikana.',
+    notSpecificationOrAttributesRoute:
+      'Hakuna ruhusa ya kufanya hivyo, hii si njia ya kubadili taarifa za sifa na chaguo.',
     notInStatusEnum:
       'Samahani, hali inabidi iwe moja kati ya hizi: haijafanyiwa kazi, inafanyiwa kazi, imepakiwa, inasubiri kufikishwa, imefikishwa, imeghairishwa.',
     passwordUpdateRoute:
       'Hakuna ruhusa ya kufanya hivyo, hii si njia ya kubadili nywila.',
-    successfulAddProductColor: 'Umefanikiwa kuongeza rangi.',
-    successfulAddProductSize: 'Umefanikiwa kupakia ukubwa.',
-    successfulDeleteProductColor: 'Umefanikiwa kufuta rangi.',
-    successfulDeleteProductSize: 'Umefanikiwa kutoa ukubwa.',
+    successfulAddProductSpecification: 'Umefanikiwa kuongeza chaguo.',
+    successfulAddProductAttribute: 'Umefanikiwa kupakia sifa.',
+    successfulDeleteProductSpecification: 'Umefanikiwa kufuta chaguo.',
+    successfulDeleteProductAttribute: 'Umefanikiwa kufuta sifa.',
     successfulSignUp: 'Umefanikiwa kujiandikisha.',
     successfulLogin: 'Umefanikiwa kuingia.',
     successfulLogout: 'Umefanikiwa kuondoka.',
@@ -262,6 +263,7 @@ export const messages = {
     notVendorUser: 'Hauruhusiwi kubadili hizi taarifa.',
     noVendorFoundWithID: 'Hakuna mchuuzi aliyepatikana mwenye hii ID.',
     noVendorsFound: 'Hakuna wachuuzi waliopatikana.',
-    successfulVendorStatus: 'Hali ya mchuuzi imebadilishwa kwa mafanikio.'
+    successfulVendorStatus: 'Hali ya mchuuzi imebadilishwa kwa mafanikio.',
+    optionsAdded: 'Hili chaguo tayari lipo na aina za machagulio zimeongezwa kwa mafanikio'
   }
 };

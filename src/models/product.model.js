@@ -26,6 +26,10 @@ const productSchema = mongoose.Schema(
       type: String,
       required: [true, 'A product must have a description']
     },
+    details: {
+      type: String,
+      required: [true, 'A product must have a description']
+    },
     category: {
       type: mongoose.Schema.ObjectId,
       ref: 'Category'
@@ -34,9 +38,33 @@ const productSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Vendor'
     },
+    viewed: {
+      type: Number,
+      default: 0
+    },
+    featured: {
+      type: Number,
+      default: 0
+    },
     price: {
       type: Number,
       required: true,
+      default: 0
+    },
+    wholeSaleLimit: {
+      type: Number,
+      default: 0
+    },
+    wholeSaleRange: {
+      type: Boolean,
+      default: true
+    },
+    wholeSale: {
+      type: Boolean,
+      default: false
+    },
+    wholeSalePrice: {
+      type: Number,
       default: 0
     },
     priceAfterDiscount: {
@@ -54,16 +82,16 @@ const productSchema = mongoose.Schema(
         message: 'Discount price ({VALUE}) should be below regular price'
       }
     },
-    colors: [
+    attribute: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'Color'
+        ref: 'Attribute'
       }
     ],
-    sizes: [
+    specification: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'Size'
+        ref: 'Specification'
       }
     ],
     quantity: {

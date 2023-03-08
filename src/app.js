@@ -25,6 +25,7 @@ import docs from '../build-docs/swagger';
 
 // Routes
 import routes from './routes';
+import { options } from 'joi';
 
 const app = express();
 
@@ -39,7 +40,7 @@ app.use(helmet());
 
 // Set Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' })); // if does not work use this: app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 // Get the user's locale, and set a default in case there's none
 app.use(
@@ -59,7 +60,10 @@ app.use(xss());
 app.use(mongoSanitize());
 
 // Implement CORS
-app.use(cors());
+var corsOptions = {
+  origin: ['http://localhost:3000'],
+  credentials: true };
+app.use(cors(corsOptions));
 app.options('*', cors());
 
 app.use(compression());

@@ -5,7 +5,7 @@ import APIFeatures from '../utils/apiFeatures';
 import { uploadFile, destroyFile } from '../utils/cloudinary';
 
 // Model
-import { Product, Color, Size } from '../models/index';
+import { Product, Specification, Attribute, Option } from '../models/index';
 
 /**
  * @desc    Query products
@@ -14,14 +14,14 @@ import { Product, Color, Size } from '../models/index';
  */
 export const queryProducts = catchAsync(async (req) => {
   const populateQuery = [
-    { path: 'colors', select: 'color' },
-    { path: 'sizes', select: 'size' }
+    { path: 'specification', select: 'specification' },
+    { path: 'attribute', select: 'attribute' }
   ];
 
   const products = await APIFeatures(req, Product, populateQuery);
-
-  // 1) Check if porducts doesn't exist
-  if (!products) {
+  console.log("products zenyewe: ",products);
+  // 1) Check if products doesn't exist
+  if (products.length === 0) {
     return {
       type: 'Error',
       message: 'noProductsFound',
@@ -45,8 +45,8 @@ export const queryProducts = catchAsync(async (req) => {
  */
 export const queryProductById = catchAsync(async (productId) => {
   const populateQuery = [
-    { path: 'colors', select: 'color' },
-    { path: 'sizes', select: 'size' }
+    { path: 'specifications', select: 'specification' },
+    { path: 'attributes', select: 'attribute' }
   ];
 
   const product = await Product.findById(productId)
@@ -61,6 +61,8 @@ export const queryProductById = catchAsync(async (productId) => {
       statusCode: 404
     };
   }
+
+  // someday, we will populate options here
 
   // 2) If everything is OK, send product
   return {
@@ -85,8 +87,9 @@ export const createProduct = catchAsync(async (body, files, seller) => {
     category,
     price,
     priceDiscount,
-    colors,
-    sizes,
+    attributes,
+    specifications,
+    details,
     quantity,
     sold,
     isOutOfStock
@@ -99,16 +102,25 @@ export const createProduct = catchAsync(async (body, files, seller) => {
   if (
     !name ||
     !description ||
+    !details ||
     !category ||
     !price ||
     !priceDiscount ||
-    !colors ||
-    !sizes ||
     !quantity ||
     !sold ||
     !isOutOfStock ||
-    mainImage.length === 0 ||
-    images.length === 0
+    mainImage.length === 0
+  ) {
+    return {
+      type: 'Error',
+      message: 'fieldsRequired',
+      statusCode: 400
+    };
+  }
+
+  if (
+    body.wholeSale &&
+    (!body.wholeSaleRange || !body.wholeSaleLimit || !body.wholeSalePrice)
   ) {
     return {
       type: 'Error',
@@ -153,6 +165,7 @@ export const createProduct = catchAsync(async (body, files, seller) => {
     imagesId,
     name,
     description,
+    details,
     category,
     price: Number(price),
     priceAfterDiscount,
@@ -163,57 +176,103 @@ export const createProduct = catchAsync(async (body, files, seller) => {
     isOutOfStock
   });
 
-  // 5) Convert colors and sizes string into an array
-  const colorsArray = colors.split(',').map((color) => color.trim());
-  const sizesArray = sizes.split(',').map((size) => size.trim());
-  const sizesDocIds = [];
-  const colorsDocIds = [];
+  // 5) Convert specifications and Attributes string into an array
+  // we dont need below as we will receive specifications and attributes as array
+  // const specificationsArray = specifications.split(',').map((specification) => specification.trim());
+  // const attributesArray = attributes.split(',').map((attribute) => attribute.trim());
+
+  const attributesDocIds = [];
+  const specificationsDocIds = [];
 
   /*
-    6) Map through the colors and sizes array and check if there is a color or size document already exist in the colors or sizes collection.
+    6) Map through the specifications and attributes array and check if there is a specification or attribute document already exist in the specifications or attributes collection.
 
-    If there is no document then create new one and push it's id into the colorsDocIds array or into the sizesDocIds array.
+    If there is no document then create new one and push it's id into the specificationsDocIds array or into the attributesDocIds array.
 
-    If the color or sizes document already exist then push the document id into the colorsDocIds or sizesDocIds array and push the product id into the color or sizes document product field and then save the document updates.
+    If the specification or attributes document already exist then push the document id into the specificationsDocIds or attributesDocIds array and push the product id into the specification or attributes document product field and then save the document updates.
 
     I used Promise.all with map cause it turns an array of promises into a single promise that, if things work, resolves into the array you want.
   */
   await Promise.all(
-    colorsArray.map(async (color) => {
-      const colorDocument = await Color.findOne({ color });
+    specifications.map(async (specification) => {
+      let optionsDocIds = [];
+      const specificationDocument = await Specification.findOne({
+        name: specification.name
+      });
 
-      if (!colorDocument) {
-        const newColor = await Color.create({ product: product.id, color });
-        colorsDocIds.push(newColor.id);
+      if (!specificationDocument) {
+        const newSpecification = await Specification.create({
+          product: product.id,
+          name: specification.name
+        });
+        specification.options.map(async (opt) => {
+          const newOption = await Option.create({
+            product: product.id,
+            specification: newSpecification.id,
+            value: opt
+          });
+          optionsDocIds.push(newOption.id);
+        });
+        specificationsDocIds.push(newSpecification.id);
+        newSpecification.option = optionsDocIds;
+        await newSpecification.save();
       } else {
-        colorsDocIds.push(colorDocument.id);
-        colorDocument.product.push(product.id);
-        await colorDocument.save();
+        specificationsDocIds.push(specificationDocument.id);
+        specificationDocument.product.push(product.id);
+        specification.options.map(async (opt) => {
+          const optionDocument = await Option.find({
+            specification: specificationDocument.id,
+            value: opt
+          });
+          if (!optionDocument) {
+            const newOption = await Option.create({
+              product: product.id,
+              specification: specificationDocument.id,
+              value: opt
+            });
+            specificationDocument.option.push(newOption.id);
+          } else {
+            optionDocument.product.push(product.id);
+            await optionDocument.save();
+          }
+        });
+        await specificationDocument.save();
       }
     })
   );
 
   await Promise.all(
-    sizesArray.map(async (size) => {
-      const sizeDocument = await Size.findOne({ size });
+    attributes.map(async (attribute) => {
+      const attributeDocument = await Attribute.findOne({
+        name: attribute.name,
+        value: attribute.value
+      });
 
-      if (!sizeDocument) {
-        const newSize = await Size.create({ product: product.id, size });
-        sizesDocIds.push(newSize.id);
+      if (!attributeDocument) {
+        const newAttribute = await Attribute.create({
+          product: product.id,
+          name: attribute.name,
+          value: attribute.value
+        });
+        attributesDocIds.push(newAttribute.id);
       } else {
-        sizesDocIds.push(sizeDocument.id);
-        sizeDocument.product.push(product.id);
-        await sizeDocument.save();
+        attributesDocIds.push(attributeDocument.id);
+        attributeDocument.product.push(product.id);
+        await attributeDocument.save();
       }
     })
   );
 
-  // 7) Update Product colors and sizes fields with the new array of color ids and size ids
-  product.colors = colorsDocIds;
-  product.sizes = sizesDocIds;
-
+  // 7) Update Product specifications and attributes fields with the new array of specification ids and attribute ids
+  product.specification = specificationsDocIds;
+  product.attribute = attributesDocIds;
+  if (body.wholeSale) {
+    product.wholeSale = body.wholeSale;
+    product.wholeSaleLimit = body.wholeSaleLimit;
+    product.wholeSalePrice = body.wholeSalePrice;
+    product.wholeSaleRange = body.wholeSaleRange;
+  }
   await product.save();
-
   // 8) If everything is OK, send data
   return {
     type: 'Success',
@@ -252,11 +311,11 @@ export const updateProductDetails = catchAsync(
       };
     }
 
-    // 3) Check if user try to update colors or sizes fields
-    if (body.colors || body.sizes) {
+    // 3) Check if user try to update specifications or attributes fields
+    if (body.specifications || body.attributes) {
       return {
         type: 'Error',
-        message: 'notColorOrSizesRoute',
+        message: 'notSpecificationOrAttributesRoute',
         statusCode: 401
       };
     }
@@ -278,14 +337,14 @@ export const updateProductDetails = catchAsync(
 );
 
 /**
- * @desc    Update Product Color
+ * @desc    Update Product Specification
  * @param   { String } productId - Product ID
  * @param   { String } sellerId - Seller ID
- * @param   { String } color - Product color
- * @returns { Object<type|message|statusCode|color> }
+ * @param   { String } specification - Product specification
+ * @returns { Object<type|message|statusCode|specification> }
  */
-export const addProductColor = catchAsync(
-  async (productId, sellerId, color) => {
+export const addProductSpecification = catchAsync(
+  async (productId, sellerId, specification) => {
     const product = await Product.findById(productId);
 
     // 1) Check if product doesn't exist
@@ -306,98 +365,83 @@ export const addProductColor = catchAsync(
       };
     }
 
-    let colorDocument = await Color.findOne({ product: productId, color });
+    let specificationDocument = await Specification.findOne({
+      product: productId,
+      name: specification.name
+    });
 
-    // 3) Check if color already exist
-    if (colorDocument) {
+    // 3) Check if specification already exist
+    if (specificationDocument) {
+      let newOptionsDocIds = [];
+      // check if all options are there
+      specification.options.map(async (opt) => {
+        const optionDocument = await Option.findOne({
+          product: productId,
+          specification: specificationDocument.id,
+          value: opt
+        });
+        if (!optionDocument) {
+          const newOption = await Option.create({
+            product: productId,
+            specification: specificationDocument.id,
+            value: opt
+          });
+          specificationDocument.option.push(newOption.id);
+          newOptionsDocIds.push(newOption.id);
+        }
+      });
+      if (newOptionsDocIds.length > 0)
+        return {
+          type: 'Success',
+          message: 'optionsAdded',
+          statusCode: 200
+        };
       return {
         type: 'Error',
-        message: 'colorExists',
+        message: 'specificationExists',
         statusCode: 401
       };
     }
+    let optionsDocIds = [];
+    // 4) Create new specification
+    specificationDocument = await Specification.create({
+      product: productId,
+      name: specification.name
+    });
+    specification.options.map(async (opt) => {
+      const newOption = await Option.create({
+        product: product.id,
+        specification: newSpecification.id,
+        value: opt
+      });
+      optionsDocIds.push(newOption.id);
+    });
 
-    // 4) Create new color
-    colorDocument = await Color.create({ product: productId, color });
+    specificationDocument.option = optionsDocIds;
 
-    product.colors.push(colorDocument.id);
-
+    product.specification.push(specificationDocument.id);
+    await specificationDocument.save();
     await product.save();
 
     // 5) If everything is OK, send data
     return {
       type: 'Success',
-      message: 'successfulAddProductColor',
+      message: 'successfulAddProductSpecification',
       statusCode: 200,
-      color: colorDocument
+      specification: specificationDocument
     };
   }
 );
 
 /**
- * @desc    Update Product Size
+ * @desc    Update Product Attribute
  * @param   { String } productId - Product ID
  * @param   { String } sellerId - Seller ID
- * @param   { String } size - Product size
- * @returns { Object<type|message|statusCode|size> }
+ * @param   { String } attribute - Product Attribute
+ * @returns { Object<type|message|statusCode|attribute> }
  */
-export const addProductSize = catchAsync(async (productId, sellerId, size) => {
-  const product = await Product.findById(productId);
-
-  // 1) Check if product doesn't exist
-  if (!product) {
-    return {
-      type: 'Error',
-      message: 'noProductFound',
-      statusCode: 404
-    };
-  }
-
-  // 2) Check if user isn't the owner of the product
-  if (sellerId.toString() !== product.seller.toString()) {
-    return {
-      type: 'Error',
-      message: 'notSeller',
-      statusCode: 403
-    };
-  }
-
-  let sizeDocument = await Size.findOne({ product: productId, size });
-
-  // 3) Check if size already exist
-  if (sizeDocument) {
-    return {
-      type: 'Error',
-      message: 'sizeExists',
-      statusCode: 401
-    };
-  }
-
-  // 4) Create new size
-  sizeDocument = await Size.create({ product: productId, size });
-
-  product.sizes.push(sizeDocument.id);
-
-  await product.save();
-
-  // 5) If everything is OK, send data
-  return {
-    type: 'Success',
-    message: 'successfulAddProductSize',
-    statusCode: 200,
-    size: sizeDocument
-  };
-});
-
-/**
- * @desc    Delete Product Color
- * @param   { String } productId - Product ID
- * @param   { String } sellerId - Seller ID
- * @param   { String } color - Product color
- * @returns { Object<type|message|statusCode> }
- */
-export const deleteProductColor = catchAsync(
-  async (productId, sellerId, color) => {
+export const addProductAttribute = catchAsync(
+  async (productId, sellerId, attribute) => {
     const product = await Product.findById(productId);
 
     // 1) Check if product doesn't exist
@@ -418,44 +462,133 @@ export const deleteProductColor = catchAsync(
       };
     }
 
-    const colorDocument = await Color.findOne({ product: productId, color });
+    let attributeDocument = await Attribute.findOne({
+      name: attribute.name,
+      value: attribute.value
+    });
+    let attributeContains = false;
 
-    // 3) Check if color doesn't exist
-    if (!colorDocument) {
-      return {
-        type: 'Error',
-        message: 'noColorExists',
-        statusCode: 404
-      };
+    // 3) Check if Attribute already exist
+    if (attributeDocument) {
+      attributeDocument.product.forEach((prod) => {
+        if (prod === productId) attributeContains = true;
+      });
+      if (attributeContains)
+        return {
+          type: 'Error',
+          message: 'attributeExists',
+          statusCode: 401
+        };
+      // edit existing attribute to contain this product
+      attributeDocument.product.push(productId);
+      await attributeDocument.save();
+    } else {
+      // 4) Create new Attribute
+      attributeDocument = await Attribute.create({
+        product: productId,
+        name: attribute.name,
+        value: attribute.value
+      });
     }
-
-    product.colors = product.colors.filter(
-      (item) => item !== colorDocument.color
-    );
+    product.attribute.push(attributeDocument.id);
 
     await product.save();
-
-    // 4) Delete color
-    await Color.findOneAndDelete({ product: productId, color });
 
     // 5) If everything is OK, send data
     return {
       type: 'Success',
-      message: 'successfulDeleteProductColor',
+      message: 'successfulAddProductAttribute',
+      statusCode: 200,
+      attribute: attributeDocument
+    };
+  }
+);
+
+/**
+ * @desc    Delete Product Specification
+ * @param   { String } productId - Product ID
+ * @param   { String } sellerId - Seller ID
+ * @param   { String } specification - Product specification
+ * @returns { Object<type|message|statusCode> }
+ */
+export const deleteProductSpecification = catchAsync(
+  async (productId, sellerId, specification) => {
+    const product = await Product.findById(productId);
+
+    // 1) Check if product doesn't exist
+    if (!product) {
+      return {
+        type: 'Error',
+        message: 'noProductFound',
+        statusCode: 404
+      };
+    }
+
+    // 2) Check if user isn't the owner of the product
+    if (sellerId.toString() !== product.seller.toString()) {
+      return {
+        type: 'Error',
+        message: 'notSeller',
+        statusCode: 403
+      };
+    }
+
+    const specificationDocument = await Specification.findOne({
+      product: productId,
+      name: specification.name
+    });
+
+    // 3) Check if specification doesn't exist
+    if (!specificationDocument) {
+      return {
+        type: 'Error',
+        message: 'noSpecificationExists',
+        statusCode: 404
+      };
+    }
+
+    product.specification = product.specification.filter(
+      (item) => item !== specificationDocument.id
+    );
+    specificationDocument.product = specificationDocument.product.filter(
+      (item) => item !== productId
+    );
+
+    const optionsDocument = await Option.find({
+      product: productId,
+      specification: specification.id
+    });
+    if (optionsDocument)
+      await Promise.all(
+        optionsDocument.forEach(async (opt) => {
+          opt.product = opt.product.filter((item) => item !== productId);
+          await opt.save();
+        })
+      );
+
+    await product.save();
+
+    // 4) Delete specification by removing that product from that specification
+    await specificationDocument.save();
+
+    // 5) If everything is OK, send data
+    return {
+      type: 'Success',
+      message: 'successfulDeleteProductSpecification',
       statusCode: 200
     };
   }
 );
 
 /**
- * @desc    Delete Product Size
+ * @desc    Delete Product Attribute
  * @param   { String } productId - Product ID
  * @param   { String } sellerId - Seller ID
- * @param   { String } size - Product size
+ * @param   { String } attribute - Product Attribute
  * @returns { Object<type|message|statusCode> }
  */
-export const deleteProductSize = catchAsync(
-  async (productId, sellerId, size) => {
+export const deleteProductAttribute = catchAsync(
+  async (productId, sellerId, attribute) => {
     const product = await Product.findById(productId);
 
     // 1) Check if product doesn't exist
@@ -476,28 +609,44 @@ export const deleteProductSize = catchAsync(
       };
     }
 
-    const sizeDocument = await Size.findOne({ product: productId, size });
+    const attributeDocument = await Attribute.findOne({
+      product: productId,
+      name: attribute.name,
+      value: attribute.value
+    });
 
-    // 3) Check if size doesn't exist
-    if (!sizeDocument) {
+    // 3) Check if Attribute doesn't exist
+    if (!attributeDocument) {
       return {
         type: 'Error',
-        message: 'noSizeExists',
+        message: 'noAttributeExists',
         statusCode: 404
       };
     }
 
-    product.sizes = product.sizes.filter((item) => item !== sizeDocument.size);
+    product.attribute = product.attribute.filter(
+      (item) => item !== attributeDocument.id
+    );
 
     await product.save();
 
-    // 4) Delete size
-    await Size.findOneAndDelete({ product: productId, size });
+    // 4) Delete Attribute
+    if (attributeDocument.product.length === 1)
+      await Attribute.findOneAndDelete({
+        product: productId,
+        name: attribute.name,
+        value: attribute.value
+      });
+    attributeDocument.product = attributeDocument.product.filter(
+      (item) => item !== productId
+    );
+
+    await attributeDocument.save();
 
     // 5) If everything is OK, send data
     return {
       type: 'Success',
-      message: 'successfulDeleteProductSize',
+      message: 'successfulDeleteProductAttribute',
       statusCode: 200
     };
   }
