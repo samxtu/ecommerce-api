@@ -65,7 +65,6 @@
   * Get Vendor Data Using It's ID [Public]
   * Update Vendor Details Using It's ID [Vendor] or [Admin]
   * Update Vendor Profile Image Using It's ID [Vendor]
-  * Delete My Account [Vendor]
   * Delete Vendor Using It's ID [Vendor] turned normal [User]
   * Activate or Deactivate Vendor [Admin]
 * Cart Services
