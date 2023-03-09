@@ -706,6 +706,119 @@ export const orderStatus = {
   }
 };
 
+export const paymentStatus = {
+  tags: ['Order'],
+  description: 'This route allow logged in seller to update order payment status',
+  opeationId: 'paymentStatus',
+  parameters: [
+    {
+      in: 'header',
+      name: 'Accept-Language',
+      type: 'string',
+      example: 'en_MX'
+    },
+    {
+      in: 'path',
+      name: 'id',
+      type: 'integer',
+      description: 'Order ID'
+    }
+  ],
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+              required: true,
+              example:
+                'Pending | Authorized | Paid | Refunded | Void'
+            }
+          }
+        }
+      }
+    }
+  },
+  responses: {
+    201: {
+      description: 'Update payment status',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                example: 'Success'
+              },
+              message1: {
+                type: 'string',
+                example: 'Payment status updated successfully.'
+              },
+              message2: {
+                type: 'string',
+                example: 'Order cancelled successfully.'
+              }
+            }
+          }
+        }
+      }
+    },
+    400: {
+      description: 'Error: 400',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                example: 'Error'
+              },
+              message1: {
+                type: 'string',
+                example: 'All fields are required.'
+              },
+              message2: {
+                type: 'string',
+                example:
+                  'Sorry by status must be one of the following: Pending, Authorized, Paid, Refunded, Void.'
+              }
+            }
+          }
+        }
+      }
+    },
+    404: {
+      description: 'Error: 404',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                example: 'Error'
+              },
+              message1: {
+                type: 'string',
+                example: 'No order found'
+              },
+              message2: {
+                type: 'string',
+                example: 'No product found with this ID'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const cancelOrder = {
   tags: ['Order'],
   description:

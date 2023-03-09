@@ -8,7 +8,7 @@
   <h3 align="center">Ecommerce API</h3>
 </h1>
 
-<h4 align="center">E-commerce API built using NodeJS & MongoDB</h4>
+<h4 align="center">E-commerce API for Talisia built using NodeJS & MongoDB</h4>
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -69,6 +69,15 @@
   * Update User Profile Image Using It's ID [User]
   * Delete My Account [User]
   * Delete User Using It's ID [Admin]
+* Vendor
+  * Create New Vendor [User] turned [Seller]
+  * Get All Vendors [Public]
+  * Get Vendor Data Using It's ID [Public]
+  * Update Vendor Details Using It's ID [Vendor] or [Admin]
+  * Update Vendor Profile Image Using It's ID [Vendor]
+  * Delete My Account [Vendor]
+  * Delete Vendor Using It's ID [Vendor] turned normal [User]
+  * Activate or Deactivate Vendor [Admin]
 * Cart Services
   * Add Product To Cart [User]
   * Reduce Product Quantity By One [User]
@@ -91,11 +100,11 @@
   * Update Product Images [Seller]
   * Delete Product Using It's ID [User]
   * Get Products Statics [Admin]
-  * Top 5 Cheapeast Products [Public]
-  * Add Product Color [Seller]
-  * Add Product Size [Seller]
-  * Delete Product Color [Seller]
-  * Delete Product Size [Seller]
+  * Top 5 Cheapest Products [Public]
+  * Add Product Attribute [Seller]
+  * Add Product Specification [Seller]
+  * Delete Product Attribute [Seller]
+  * Delete Product Specification [Seller]
 * Favorite Services
   * Get Favorite Products List [User]
   * Add Product to Favorite List [User]
@@ -114,24 +123,20 @@
   * Query Order Using It's ID [User]
   * Cancel Order [User]
   * Update Order Status [Admin]
+  * Update Order Payment Status [Admin]
 * Category Services
   * Create New Category [User]
-  * Query Categories [Public]
-  * Query Category Using It's ID [Public]
+  * Create New SubCategory [User]
+  * Query Categories with its SubCategories [Public]
+  * Query Category Using It's ID with its SubCategories [Public]
   * Update Category Details [Admin]
   * Update Category Image [Admin]
-  * Delete Category [Admin]
-* Multi-Language Support
+  * Delete Category or SubCategory or Both [Admin]
+* Multi-Language Support (English and Swahili for now)
 
 ## Deployment
 
-The API is deployed with git into Heroku. Below are the steps taken:
-
-```
-git init
-git add -A
-git commit -m "Commit message"
-```
+Still thinking for a cheap option, we need it to start working on the mobile app and web version. 
 
 ## Built With
 
@@ -168,20 +173,21 @@ List of any major frameworks used to build the project.
 
 ## Installation
 
-You can fork the app or you can git-clone the app into your local machine. Once done that, please install all the
-dependencies by running
+You can fork the app or you can git-clone the app into your local machine. Once done that, please install all the dependencies by running
 ```
 $ yarn install
-set your env variables
+set your env variables / create accounts where necessary
 $ yarn run start
 ```
 
 ### Docker Installation 
 You can fork the app or you can git-clone the app into your local machine. 
 
-*Note:Set the environment variables up to date and setup the database environment and also you need install docker on your local machine*
+##### This is not up to date for now, inapoteza my bundle so I stopped using this for now but will come to it near deployment.
+
+*Note:Set the environment variables up to date and you need install docker on your local machine*
 
 ```
-$ docker-compose up -d
+$ docker-compose up
 ```
 

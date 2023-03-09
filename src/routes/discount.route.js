@@ -27,7 +27,7 @@ router.delete('/cancel', cancelDiscountCode);
 
 router.get('/find', getDiscount);
 
-router.use(restrictedTo('admin'));
+router.use(restrictedTo('admin','seller','adminUser', 'sellerUser'));
 
 router.get('/', getAllDiscountCodes);
 

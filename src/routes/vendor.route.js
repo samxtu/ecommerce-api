@@ -55,6 +55,6 @@ router.patch(
   );
 
 // Delete Vendor Route
-router.delete('/:id', restrictedTo('seller'), deleteVendor);
+router.delete('/:id', restrictedTo('admin','seller'), deleteVendor);
 
 export default router;

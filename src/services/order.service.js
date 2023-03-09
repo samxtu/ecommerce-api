@@ -55,7 +55,7 @@ export const createOrder = catchAsync(async (body, user) => {
   }
 
   // 4) Check payment method
-  if (paymentMethod === 'cash') {
+  if (paymentMethod === 'mobile') {
     // 1) If payment method is cash the create new order for the cash method
     const order = await Order.create({
       products: cart.items,
@@ -116,7 +116,7 @@ export const createOrder = catchAsync(async (body, user) => {
   // 8) Create stripe charge
   const charge = stripe.charges.create({
     amount: Math.round(cart.totalPrice),
-    currency: 'usd',
+    currency: 'tzs',
     source: token.id,
     description: 'Charge For Products'
   });
@@ -127,6 +127,7 @@ export const createOrder = catchAsync(async (body, user) => {
     user: user._id,
     totalPrice: cart.totalPrice,
     isPaid: true,
+    paymentStatus: 'Paid',
     paidAt: moment(),
     shippingAddress,
     paymentMethod,
@@ -244,6 +245,91 @@ export const orderStatus = catchAsync(async (status, id) => {
     statusCode: 200
   };
 });
+
+
+/**
+ * @desc    Update Payment Status
+ * @param   { String } status - Payment status
+ * @param   { String } id - Payment ID
+ * @returns { Object<type|message|statusCode> }
+ */
+export const paymentStatus = catchAsync(async (status, id) => {
+  // 1) All fields are required
+  if (!status) {
+    return {
+      type: 'Error',
+      message: 'fieldsRequired',
+      statusCode: 400
+    };
+  }
+
+  // 2) Check if status doesn't meet the enum
+  if (
+    ![
+      'Pending', 'Authorized', 'Paid', 'Refunded', 'Void'
+    ].includes(status)
+  ) {
+    return {
+      type: 'Error',
+      message: 'notInPaymentStatusEnum',
+      statusCode: 400
+    };
+  }
+
+  const order = await Order.findById(id);
+
+  // 3) Check if order doesn't exist
+  if (!order) {
+    return {
+      type: 'Error',
+      message: 'noOrder',
+      statusCode: 404
+    };
+  }
+
+  // 4) Check if order have been cancelled
+  if (status === 'Void') {
+    for (const item of order.products) {
+      const product = await Product.findById(item.product);
+
+      if (!product) {
+        return {
+          type: 'Error',
+          message: 'noProductFound',
+          statusCode: 404
+        };
+      }
+
+      await Product.findByIdAndUpdate(item.product, {
+        quantity: product.quantity + item.totalProductQuantity,
+        sold: product.sold - item.totalProductQuantity
+      });
+    }
+
+    await Order.findByIdAndDelete(id);
+
+    return {
+      type: 'Success',
+      message: 'successfulOrderCancel',
+      statusCode: 200
+    };
+  }
+
+  // 5) Save order new status
+  order.paymentStatus = status;
+  order.isPaid = status === 'Paid';
+  order.paidAt = status === 'Paid'? moment() : null;
+
+  await order.save();
+
+  // 6) If everything is OK, send data
+  return {
+    type: 'Success',
+    message: 'successfulStatusUpdate',
+    statusCode: 200
+  };
+});
+
 
 /**
  * @desc    Query Orders

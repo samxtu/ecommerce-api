@@ -76,6 +76,7 @@ import {
   getAllOrders,
   getOrder,
   orderStatus,
+  paymentStatus,
   cancelOrder
 } from './order.swagger';
 
@@ -284,6 +285,9 @@ const docs = {
       get: getOrder,
       patch: orderStatus,
       delete: cancelOrder
+    },
+    '/order/{orderId}/payment': {
+      patch: paymentStatus
     },
     '/product/{productId}/reviews': {
       get: getAllProductReviews,

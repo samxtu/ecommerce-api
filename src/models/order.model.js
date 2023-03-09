@@ -60,6 +60,11 @@ const orderSchema = mongoose.Schema(
       type: String,
       default: 'Not Processed',
       enum: ['Not Processed', 'Processing', 'Shipped', 'Waiting Delivery', 'Delivered', 'Cancelled']
+    },
+    paymentStatus: {
+      type: String,
+      default: 'Pending',
+      enum: ['Pending', 'Authorized', 'Paid', 'Refunded', 'Void']
     }
   },
   { timestamps: true }

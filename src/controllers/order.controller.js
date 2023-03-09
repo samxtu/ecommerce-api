@@ -65,6 +65,38 @@ export const orderStatus = catchAsync(async (req, res) => {
   });
 });
 
+
+/**
+ * @desc      Update payment status Controller
+ * @param     { Object } req - Request object
+ * @param     { Object } res - Response object
+ * @property  { String } req.body.status - Payment status
+ * @property  { String } req.params.id - Payment ID
+ * @return    { JSON } - A JSON object representing the type, message and the payment
+ */
+export const paymentStatus = catchAsync(async (req, res) => {
+  // 1) Update payment status
+  const { type, message, statusCode } = await paymentService.paymentStatus(
+    req.body.status,
+    req.params.id
+  );
+
+  // 2) Check if there is an error
+  if (type === 'Error') {
+    return res.status(statusCode).json({
+      type,
+      message: req.polyglot.t(message)
+    });
+  }
+
+  // 3) If everything is OK, send data
+  return res.status(statusCode).json({
+    type,
+    message: req.polyglot.t(message)
+  });
+});
+
+
 /**
  * @desc      Get All Orders Controller
  * @param     { Object }  req - Request object

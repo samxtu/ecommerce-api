@@ -57,6 +57,8 @@ export const messages = {
     noAttributeExists: 'Attribute does not exist.',
     notInStatusEnum:
       'Sorry by status must be one of the following: Not Processed, Processing, Shipped, Waiting Delivery, Delivered, Cancelled.',
+    notInPaymentStatusEnum:
+      'Sorry by status must be one of the following: Pending, Authorized, Paid, Refunded, Void',
     notSpecificationOrAttributesRoute:
       'Sorry this is not the right route to update specifications and attributes.',
     passwordUpdateRoute:
@@ -189,6 +191,8 @@ export const messages = {
     noSpecificationExists: 'Chaguo hili halijapatikana.',
     notSpecificationOrAttributesRoute:
       'Hakuna ruhusa ya kufanya hivyo, hii si njia ya kubadili taarifa za sifa na chaguo.',
+    notInPaymentStatusEnum:
+        'Samahani, hali inabidi iwe moja kati ya hizi: Imesubirishwa, Imeidhinishwa, Imelipwa, Imerudishwa, Imefutwa',
     notInStatusEnum:
       'Samahani, hali inabidi iwe moja kati ya hizi: haijafanyiwa kazi, inafanyiwa kazi, imepakiwa, inasubiri kufikishwa, imefikishwa, imeghairishwa.',
     passwordUpdateRoute:

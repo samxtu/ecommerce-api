@@ -33,9 +33,20 @@ export const createCategory = catchAsync(async (body, file) => {
 
   // 4) Upload image to cloudinary
   image = await uploadFile(image.content, folderName, 600);
-
+  
+  let object = {};
   // 5) Create body
-  const object = {
+  if(body.parent){
+    object = {
+      name,
+      description,
+      child: true,
+      parent: body.parent,
+      image: image.secure_url,
+      imageId: image.public_id
+    };
+  } else
+  object = {
     name,
     description,
     image: image.secure_url,
@@ -71,12 +82,27 @@ export const queryCategories = catchAsync(async (req) => {
       statusCode: 404
     };
   }
+
+  // 3) Attach sub categories to parent categories
+  let subCategories = categories.filter(
+    item => item.child === true
+  );
+  let mainCategories = categories.filter(
+    item => item.child !== true
+  );
+  mainCategories = mainCategories.map( cat => {
+    let myChilds = subCategories.filter(
+      item => item.parent === cat.id
+    );
+    cat.subCategories = myChilds;
+    return cat;
+  })
   // 3) If everything is OK, send categories
   return {
     type: 'Success',
     message: 'successfulCategoriesFound',
     statusCode: 200,
-    categories
+    mainCategories
   };
 });
 
@@ -87,7 +113,6 @@ export const queryCategories = catchAsync(async (req) => {
  */
 export const queryCategory = catchAsync(async (id) => {
   const category = await Category.findById(id);
-
   // 1) Check if category doesn't exist
   if (!category) {
     return {
@@ -96,13 +121,19 @@ export const queryCategory = catchAsync(async (id) => {
       statusCode: 404
     };
   }
+  // 2) Fill subCategories
+  const myChilds = await Category.find({ parent: id, child: true });
+  let resCat = category;
+  if(myChilds.length !== 0)
+  resCat.subCategories = myChilds;
+  else resCat.subCategories = [];
 
   // 2) If everything is OK, send date
   return {
     type: 'Success',
     message: 'successfulCategoryFound',
     statusCode: 200,
-    category
+    resCat
   };
 });
 
@@ -130,7 +161,7 @@ export const updateCategoryDetails = catchAsync(async (id, body) => {
     runValidators: true
   });
 
-  // 3) If everything is OK, send date
+  // 3) If everything is OK, send data
   return {
     type: 'Success',
     message: 'successfulCategoryDetails',
@@ -202,6 +233,7 @@ export const updateCategoryImage = catchAsync(async (id, image) => {
  */
 export const deleteCategoryById = catchAsync(async (id) => {
   const category = await Category.findById(id);
+  let subCategories = [];
 
   // 1) Check if category doesn't exist
   if (!category) {
@@ -215,8 +247,15 @@ export const deleteCategoryById = catchAsync(async (id) => {
   // 2) Destroy category image
   destroyFile(category.imageId);
 
-  // 3) Delete category
+  // 3) Delete category and if any sub categories available
   await Category.findByIdAndDelete(id);
+  if(category.child === false){
+    subCategories = await Category.find({ parent: id, child: true });
+    if(subCategories.length !== 0)
+    subCategories.forEach(async sub =>{
+      await Category.findByIdAndDelete(sub.id);
+    });
+  }
 
   // 4) If everything is OK, send date
   return {

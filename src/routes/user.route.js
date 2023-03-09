@@ -35,7 +35,7 @@ router.post('/create-admin-route', createUser);
 router.use(protect);
 
 // Create New User (Multer Middleware) Route
-router.post('/', restrictedTo('admin'), singleFile('image'), createUser);
+router.post('/', restrictedTo('admin','seller'), singleFile('image'), createUser);
 
 // Update User Details Route
 router.patch('/update-details', updateUserDetails);
@@ -51,6 +51,6 @@ router.patch(
 router.delete('/me', deleteMyAccount);
 
 // Delete User Route
-router.delete('/:id', restrictedTo('admin'), deleteUser);
+router.delete('/:id', restrictedTo('admin','seller'), deleteUser);
 
 export default router;
